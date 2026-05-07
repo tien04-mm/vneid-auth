@@ -1,0 +1,54 @@
+server:
+  port: 9090
+
+spring:
+  application:
+    name: vneid-auth-service
+
+  datasource:
+    url: jdbc:mysql://localhost:3306/vneid_simulator
+    username: root
+    password: 
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
+
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ${MAIL_USERNAME}
+    password: ${MAIL_PASSWORD}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
+# JWT Configuration - SHARED SECRET KEY giữa vneid-auth-service và land-tax-core-service
+jwt:
+  secret: ${JWT_SECRET:ThangLong2025VNeIDLandTaxSharedSecretKeyForJWTAuth!@#$%}
+  expiration: 86400000  # 24 hours in milliseconds
+
+# Firebase Configuration
+firebase:
+  config-file: ${FIREBASE_CONFIG_FILE:firebase-service-account.json}
+
+# Internal API Security
+internal:
+  api:
+    secret: ${INTERNAL_API_SECRET:VNeIDInternalSecretKey2025}
+
+# Debug Logging - Chẩn đoán lỗi 403 Forbidden
+logging:
+  level:
+    org.springframework.security: DEBUG
+    org.springframework.security.web.FilterChainProxy: DEBUG
+    org.springframework.security.web.access: DEBUG
+    com.thanglong.vneid: DEBUG
