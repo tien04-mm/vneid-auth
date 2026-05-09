@@ -33,7 +33,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
      */
     private static final List<String> PUBLIC_PATHS = List.of(
             "/api/auth/**",
-            "/api/activation/**",
+            "/api/vneid/activate/**",
             "/api/qr/**",
             "/api/vneid/internal/**",
             "/v3/api-docs/**",

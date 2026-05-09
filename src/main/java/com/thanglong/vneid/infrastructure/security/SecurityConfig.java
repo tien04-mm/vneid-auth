@@ -42,7 +42,7 @@ public class SecurityConfig {
      */
     private static final String[] PUBLIC_ENDPOINTS = {
             "/api/auth/**",
-            "/api/activation/**",
+            "/api/vneid/activate/**",
             "/api/qr/**",
             "/api/vneid/internal/**",
             "/v3/api-docs/**",

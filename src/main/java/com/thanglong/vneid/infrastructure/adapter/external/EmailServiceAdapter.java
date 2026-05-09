@@ -26,8 +26,12 @@ public class EmailServiceAdapter implements EmailService {
         message.setTo(to);
         message.setSubject("[VNeID] Mã xác thực OTP");
         message.setText("Mã OTP của bạn là: " + otpCode + "\nMã có hiệu lực trong 5 phút.");
-        mailSender.send(message);
-        log.info("OTP email sent to {}", to);
+        try {
+            mailSender.send(message);
+            log.info("OTP email sent to {}", to);
+        } catch (Exception e) {
+            log.error("Failed to send OTP email to {}: {}. OTP code was: {}", to, e.getMessage(), otpCode);
+        }
     }
 
     @Override
@@ -36,8 +40,12 @@ public class EmailServiceAdapter implements EmailService {
         message.setTo(to);
         message.setSubject("[VNeID] Kích hoạt tài khoản");
         message.setText("Nhấn vào link sau để kích hoạt tài khoản: " + activationLink);
-        mailSender.send(message);
-        log.info("Activation email sent to {}", to);
+        try {
+            mailSender.send(message);
+            log.info("Activation email sent to {}", to);
+        } catch (Exception e) {
+            log.error("Failed to send activation email to {}: {}", to, e.getMessage());
+        }
     }
 
     @Override
@@ -46,7 +54,11 @@ public class EmailServiceAdapter implements EmailService {
         message.setTo(to);
         message.setSubject("[VNeID] Đặt lại mật khẩu");
         message.setText("Nhấn vào link sau để đặt lại mật khẩu: " + resetLink);
-        mailSender.send(message);
-        log.info("Password reset email sent to {}", to);
+        try {
+            mailSender.send(message);
+            log.info("Password reset email sent to {}", to);
+        } catch (Exception e) {
+            log.error("Failed to send password reset email to {}: {}", to, e.getMessage());
+        }
     }
 }
