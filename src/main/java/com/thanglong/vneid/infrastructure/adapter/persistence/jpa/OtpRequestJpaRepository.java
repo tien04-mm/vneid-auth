@@ -12,12 +12,12 @@ public interface OtpRequestJpaRepository extends JpaRepository<OtpRequestEntity,
 
     Optional<OtpRequestEntity> findByEmailAndOtpCode(String email, String otpCode);
 
-    Optional<OtpRequestEntity> findByCccdNumberAndOtpCode(String cccdNumber, String otpCode);
+    Optional<OtpRequestEntity> findByCitizen_CccdNumberAndOtpCode(String cccdNumber, String otpCode);
 
     @Query("SELECT o FROM OtpRequestEntity o WHERE o.email = :email ORDER BY o.createdAt DESC LIMIT 1")
     Optional<OtpRequestEntity> findLatestByEmail(String email);
 
     void deleteByEmail(String email);
 
-    void deleteByCccdNumber(String cccdNumber);
+    void deleteByCitizen_CccdNumber(String cccdNumber);
 }

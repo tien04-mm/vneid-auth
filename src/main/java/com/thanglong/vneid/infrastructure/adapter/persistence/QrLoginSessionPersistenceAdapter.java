@@ -3,6 +3,7 @@ package com.thanglong.vneid.infrastructure.adapter.persistence;
 import com.thanglong.vneid.domain.model.QrLoginSession;
 import com.thanglong.vneid.domain.repository.QrLoginSessionRepository;
 import com.thanglong.vneid.infrastructure.adapter.persistence.entity.QrLoginSessionEntity;
+import com.thanglong.vneid.infrastructure.adapter.persistence.entity.CitizenEntity;
 import com.thanglong.vneid.infrastructure.adapter.persistence.jpa.QrLoginSessionJpaRepository;
 import org.springframework.stereotype.Component;
 
@@ -44,7 +45,7 @@ public class QrLoginSessionPersistenceAdapter implements QrLoginSessionRepositor
         return QrLoginSession.builder()
                 .qrToken(entity.getQrToken())
                 .status(entity.getStatus())
-                .cccdNumber(entity.getCccdNumber())
+                .cccdNumber(entity.getCitizen() != null ? entity.getCitizen().getCccdNumber() : null)
                 .createdAt(entity.getCreatedAt())
                 .expiresAt(entity.getExpiresAt())
                 .build();
@@ -52,10 +53,15 @@ public class QrLoginSessionPersistenceAdapter implements QrLoginSessionRepositor
 
     private QrLoginSessionEntity toEntity(QrLoginSession domain) {
         if (domain == null) return null;
+        CitizenEntity citizen = null;
+        if (domain.getCccdNumber() != null) {
+            citizen = new CitizenEntity();
+            citizen.setCccdNumber(domain.getCccdNumber());
+        }
         return QrLoginSessionEntity.builder()
                 .qrToken(domain.getQrToken())
                 .status(domain.getStatus())
-                .cccdNumber(domain.getCccdNumber())
+                .citizen(citizen)
                 .createdAt(domain.getCreatedAt())
                 .expiresAt(domain.getExpiresAt())
                 .build();

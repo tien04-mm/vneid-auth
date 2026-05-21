@@ -3,6 +3,7 @@ package com.thanglong.vneid.infrastructure.adapter.persistence;
 import com.thanglong.vneid.domain.model.OtpRequest;
 import com.thanglong.vneid.domain.repository.OtpRequestRepository;
 import com.thanglong.vneid.infrastructure.adapter.persistence.entity.OtpRequestEntity;
+import com.thanglong.vneid.infrastructure.adapter.persistence.entity.CitizenEntity;
 import com.thanglong.vneid.infrastructure.adapter.persistence.jpa.OtpRequestJpaRepository;
 import org.springframework.stereotype.Component;
 
@@ -25,7 +26,7 @@ public class OtpRequestPersistenceAdapter implements OtpRequestRepository {
 
     @Override
     public Optional<OtpRequest> findByCccdNumberAndOtpCode(String cccdNumber, String otpCode) {
-        return otpRequestJpaRepository.findByCccdNumberAndOtpCode(cccdNumber, otpCode)
+        return otpRequestJpaRepository.findByCitizen_CccdNumberAndOtpCode(cccdNumber, otpCode)
                 .map(this::toDomainModel);
     }
 
@@ -49,14 +50,14 @@ public class OtpRequestPersistenceAdapter implements OtpRequestRepository {
 
     @Override
     public void deleteByCccdNumber(String cccdNumber) {
-        otpRequestJpaRepository.deleteByCccdNumber(cccdNumber);
+        otpRequestJpaRepository.deleteByCitizen_CccdNumber(cccdNumber);
     }
 
     private OtpRequest toDomainModel(OtpRequestEntity entity) {
         if (entity == null) return null;
         return OtpRequest.builder()
                 .id(entity.getId())
-                .cccdNumber(entity.getCccdNumber())
+                .cccdNumber(entity.getCitizen() != null ? entity.getCitizen().getCccdNumber() : null)
                 .email(entity.getEmail())
                 .otpCode(entity.getOtpCode())
                 .createdAt(entity.getCreatedAt())
@@ -67,9 +68,14 @@ public class OtpRequestPersistenceAdapter implements OtpRequestRepository {
 
     private OtpRequestEntity toEntity(OtpRequest otpRequest) {
         if (otpRequest == null) return null;
+        CitizenEntity citizen = null;
+        if (otpRequest.getCccdNumber() != null) {
+            citizen = new CitizenEntity();
+            citizen.setCccdNumber(otpRequest.getCccdNumber());
+        }
         return OtpRequestEntity.builder()
                 .id(otpRequest.getId())
-                .cccdNumber(otpRequest.getCccdNumber())
+                .citizen(citizen)
                 .email(otpRequest.getEmail())
                 .otpCode(otpRequest.getOtpCode())
                 .createdAt(otpRequest.getCreatedAt())

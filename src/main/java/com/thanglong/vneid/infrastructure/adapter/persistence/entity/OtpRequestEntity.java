@@ -14,8 +14,9 @@ public class OtpRequestEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "cccd_number", length = 12, nullable = false)
-    private String cccdNumber;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "cccd_number", referencedColumnName = "cccd_number", nullable = false)
+    private CitizenEntity citizen;
 
     @Column(name = "email", nullable = false)
     private String email;
@@ -35,10 +36,10 @@ public class OtpRequestEntity {
     public OtpRequestEntity() {
     }
 
-    public OtpRequestEntity(Long id, String cccdNumber, String email, String otpCode, LocalDateTime createdAt,
+    public OtpRequestEntity(Long id, CitizenEntity citizen, String email, String otpCode, LocalDateTime createdAt,
             LocalDateTime expiresAt, boolean used) {
         this.id = id;
-        this.cccdNumber = cccdNumber;
+        this.citizen = citizen;
         this.email = email;
         this.otpCode = otpCode;
         this.createdAt = createdAt;
@@ -58,12 +59,12 @@ public class OtpRequestEntity {
         this.id = id;
     }
 
-    public String getCccdNumber() {
-        return cccdNumber;
+    public CitizenEntity getCitizen() {
+        return citizen;
     }
 
-    public void setCccdNumber(String cccdNumber) {
-        this.cccdNumber = cccdNumber;
+    public void setCitizen(CitizenEntity citizen) {
+        this.citizen = citizen;
     }
 
     public String getEmail() {
@@ -108,7 +109,7 @@ public class OtpRequestEntity {
 
     public static class OtpRequestEntityBuilder {
         private Long id;
-        private String cccdNumber;
+        private CitizenEntity citizen;
         private String email;
         private String otpCode;
         private LocalDateTime createdAt;
@@ -120,8 +121,8 @@ public class OtpRequestEntity {
             return this;
         }
 
-        public OtpRequestEntityBuilder cccdNumber(String cccdNumber) {
-            this.cccdNumber = cccdNumber;
+        public OtpRequestEntityBuilder citizen(CitizenEntity citizen) {
+            this.citizen = citizen;
             return this;
         }
 
@@ -151,7 +152,7 @@ public class OtpRequestEntity {
         }
 
         public OtpRequestEntity build() {
-            return new OtpRequestEntity(id, cccdNumber, email, otpCode, createdAt, expiresAt, used);
+            return new OtpRequestEntity(id, citizen, email, otpCode, createdAt, expiresAt, used);
         }
     }
 }

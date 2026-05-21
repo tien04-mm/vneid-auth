@@ -17,8 +17,9 @@ public class QrLoginSessionEntity {
     @Column(name = "status", length = 20)
     private String status;
 
-    @Column(name = "cccd_number", length = 12)
-    private String cccdNumber;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "cccd_number", referencedColumnName = "cccd_number")
+    private CitizenEntity citizen;
 
     @Column(name = "created_at")
     private LocalDateTime createdAt;
@@ -29,11 +30,11 @@ public class QrLoginSessionEntity {
     public QrLoginSessionEntity() {
     }
 
-    public QrLoginSessionEntity(String qrToken, String status, String cccdNumber, LocalDateTime createdAt,
+    public QrLoginSessionEntity(String qrToken, String status, CitizenEntity citizen, LocalDateTime createdAt,
             LocalDateTime expiresAt) {
         this.qrToken = qrToken;
         this.status = status;
-        this.cccdNumber = cccdNumber;
+        this.citizen = citizen;
         this.createdAt = createdAt;
         this.expiresAt = expiresAt;
     }
@@ -58,12 +59,12 @@ public class QrLoginSessionEntity {
         this.status = status;
     }
 
-    public String getCccdNumber() {
-        return cccdNumber;
+    public CitizenEntity getCitizen() {
+        return citizen;
     }
 
-    public void setCccdNumber(String cccdNumber) {
-        this.cccdNumber = cccdNumber;
+    public void setCitizen(CitizenEntity citizen) {
+        this.citizen = citizen;
     }
 
     public LocalDateTime getCreatedAt() {
@@ -85,7 +86,7 @@ public class QrLoginSessionEntity {
     public static class QrLoginSessionEntityBuilder {
         private String qrToken;
         private String status;
-        private String cccdNumber;
+        private CitizenEntity citizen;
         private LocalDateTime createdAt;
         private LocalDateTime expiresAt;
 
@@ -99,8 +100,8 @@ public class QrLoginSessionEntity {
             return this;
         }
 
-        public QrLoginSessionEntityBuilder cccdNumber(String cccdNumber) {
-            this.cccdNumber = cccdNumber;
+        public QrLoginSessionEntityBuilder citizen(CitizenEntity citizen) {
+            this.citizen = citizen;
             return this;
         }
 
@@ -115,7 +116,7 @@ public class QrLoginSessionEntity {
         }
 
         public QrLoginSessionEntity build() {
-            return new QrLoginSessionEntity(qrToken, status, cccdNumber, createdAt, expiresAt);
+            return new QrLoginSessionEntity(qrToken, status, citizen, createdAt, expiresAt);
         }
     }
 }
