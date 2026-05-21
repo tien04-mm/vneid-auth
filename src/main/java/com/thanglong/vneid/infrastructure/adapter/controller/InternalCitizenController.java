@@ -47,7 +47,7 @@ public class InternalCitizenController {
         CitizenIdentityDTO dto = CitizenIdentityDTO.builder()
                 .cccdNumber(entity.getCccdNumber())
                 .fullName(entity.getFullName())
-                .dob(entity.getDateOfBirth())
+                .dob(entity.getDob())
                 .gender(entity.getGender())
                 .email(entity.getEmail())
                 .phoneNumber(entity.getPhoneNumber())
@@ -86,11 +86,7 @@ public class InternalCitizenController {
                     .body(ApiResponse.error("Unauthorized internal access", "FORBIDDEN"));
         }
 
-        CitizenEntity entity = citizenJpaRepository.findByCccdNumber(cccd)
-                .orElseThrow(() -> new RuntimeException("Không tìm thấy công dân với CCCD: " + cccd));
-        
-        entity.setRole(role);
-        citizenJpaRepository.save(entity);
+        log.info("[Internal API] Nhận yêu cầu cập nhật role cho CCCD: {}, role: {} (Bỏ qua do cột role đã bị loại bỏ ở CSDL VNeID)", cccd, role);
         return ResponseEntity.ok(ApiResponse.success(null, "Cập nhật role thành công"));
     }
 

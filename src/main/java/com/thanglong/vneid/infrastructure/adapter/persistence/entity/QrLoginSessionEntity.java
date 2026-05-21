@@ -1,23 +1,35 @@
-package com.thanglong.vneid.domain.model;
+package com.thanglong.vneid.infrastructure.adapter.persistence.entity;
 
-import lombok.*;
-
+import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
 /**
- * Domain model đại diện cho phiên đăng nhập bằng QR Code.
+ * JPA Entity mapping với bảng qr_login_sessions.
  */
-public class QrSession {
+@Entity
+@Table(name = "qr_login_sessions")
+public class QrLoginSessionEntity {
+
+    @Id
+    @Column(name = "qr_token", nullable = false)
     private String qrToken;
-    private String status; // PENDING, SUCCESS, EXPIRED
+
+    @Column(name = "status", length = 20)
+    private String status;
+
+    @Column(name = "cccd_number", length = 12)
     private String cccdNumber;
+
+    @Column(name = "created_at")
     private LocalDateTime createdAt;
+
+    @Column(name = "expires_at")
     private LocalDateTime expiresAt;
 
-    public QrSession() {
+    public QrLoginSessionEntity() {
     }
 
-    public QrSession(String qrToken, String status, String cccdNumber, LocalDateTime createdAt,
+    public QrLoginSessionEntity(String qrToken, String status, String cccdNumber, LocalDateTime createdAt,
             LocalDateTime expiresAt) {
         this.qrToken = qrToken;
         this.status = status;
@@ -26,8 +38,8 @@ public class QrSession {
         this.expiresAt = expiresAt;
     }
 
-    public static QrSessionBuilder builder() {
-        return new QrSessionBuilder();
+    public static QrLoginSessionEntityBuilder builder() {
+        return new QrLoginSessionEntityBuilder();
     }
 
     public String getQrToken() {
@@ -70,40 +82,40 @@ public class QrSession {
         this.expiresAt = expiresAt;
     }
 
-    public static class QrSessionBuilder {
+    public static class QrLoginSessionEntityBuilder {
         private String qrToken;
         private String status;
         private String cccdNumber;
         private LocalDateTime createdAt;
         private LocalDateTime expiresAt;
 
-        public QrSessionBuilder qrToken(String qrToken) {
+        public QrLoginSessionEntityBuilder qrToken(String qrToken) {
             this.qrToken = qrToken;
             return this;
         }
 
-        public QrSessionBuilder status(String status) {
+        public QrLoginSessionEntityBuilder status(String status) {
             this.status = status;
             return this;
         }
 
-        public QrSessionBuilder cccdNumber(String cccdNumber) {
+        public QrLoginSessionEntityBuilder cccdNumber(String cccdNumber) {
             this.cccdNumber = cccdNumber;
             return this;
         }
 
-        public QrSessionBuilder createdAt(LocalDateTime createdAt) {
+        public QrLoginSessionEntityBuilder createdAt(LocalDateTime createdAt) {
             this.createdAt = createdAt;
             return this;
         }
 
-        public QrSessionBuilder expiresAt(LocalDateTime expiresAt) {
+        public QrLoginSessionEntityBuilder expiresAt(LocalDateTime expiresAt) {
             this.expiresAt = expiresAt;
             return this;
         }
 
-        public QrSession build() {
-            return new QrSession(qrToken, status, cccdNumber, createdAt, expiresAt);
+        public QrLoginSessionEntity build() {
+            return new QrLoginSessionEntity(qrToken, status, cccdNumber, createdAt, expiresAt);
         }
     }
 }

@@ -1,23 +1,26 @@
 package com.thanglong.vneid.usecase.service;
 
 import com.thanglong.vneid.domain.model.Citizen;
-import com.thanglong.vneid.domain.model.Otp;
+import com.thanglong.vneid.domain.model.OtpRequest;
 import com.thanglong.vneid.domain.repository.CitizenRepository;
-import com.thanglong.vneid.domain.repository.OtpRepository;
+import com.thanglong.vneid.domain.repository.OtpRequestRepository;
 import com.thanglong.vneid.usecase.port.EmailService;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
 public class ActivationUseCase {
 
     private final CitizenRepository citizenRepository;
-    private final OtpRepository otpRepository;
+    private final OtpRequestRepository otpRepository;
     private final EmailService emailService;
+    private final PasswordEncoder passwordEncoder;
 
-    public ActivationUseCase(CitizenRepository citizenRepository, OtpRepository otpRepository, EmailService emailService) {
+    public ActivationUseCase(CitizenRepository citizenRepository, OtpRequestRepository otpRepository, EmailService emailService, PasswordEncoder passwordEncoder) {
         this.citizenRepository = citizenRepository;
         this.otpRepository = otpRepository;
         this.emailService = emailService;
+        this.passwordEncoder = passwordEncoder;
     }
 
     /**
@@ -43,7 +46,7 @@ public class ActivationUseCase {
         // Sinh OTP
         String otpCode = String.format("%06d", new java.util.Random().nextInt(1000000));
         
-        Otp otp = Otp.builder()
+        OtpRequest otp = OtpRequest.builder()
                 .cccdNumber(cccdNumber)
                 .email(email)
                 .otpCode(otpCode)
@@ -63,7 +66,7 @@ public class ActivationUseCase {
      * Bước 2: Xác thực OTP.
      */
     public void verifyOtp(String cccdNumber, String otpCode) {
-        Otp otp = otpRepository.findByCccdNumberAndOtpCode(cccdNumber, otpCode)
+        OtpRequest otp = otpRepository.findByCccdNumberAndOtpCode(cccdNumber, otpCode)
                 .orElseThrow(() -> new RuntimeException("Mã OTP không hợp lệ"));
 
         if (otp.isUsed()) {
@@ -85,12 +88,9 @@ public class ActivationUseCase {
         Citizen citizen = citizenRepository.findByCccdNumber(cccdNumber)
                 .orElseThrow(() -> new RuntimeException("Không tìm thấy thông tin công dân"));
 
-        // Lưu ý: Trong thực tế nên hash password/passcode.
-        // Ở đây giả định đơn giản để demo.
-        citizen.setPassword(password); 
-        citizen.setPasscode(passcode);
+        citizen.setPasswordHash(passwordEncoder.encode(password));
+        citizen.setPasscodeHash(passwordEncoder.encode(passcode));
         citizen.setAccountStatus("ACTIVE");
-        citizen.setUpdatedAt(java.time.LocalDateTime.now());
 
         return citizenRepository.save(citizen);
     }

@@ -4,29 +4,29 @@ import com.thanglong.vneid.domain.model.Citizen;
 import com.thanglong.vneid.domain.repository.CitizenRepository;
 import com.thanglong.vneid.usecase.dto.AuthResponse;
 import com.thanglong.vneid.usecase.port.JwtProvider;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class LoginUseCase {
 
     private final CitizenRepository citizenRepository;
     private final JwtProvider jwtProvider;
+    private final PasswordEncoder passwordEncoder;
 
-    public LoginUseCase(CitizenRepository citizenRepository, JwtProvider jwtProvider) {
+    public LoginUseCase(CitizenRepository citizenRepository, JwtProvider jwtProvider, PasswordEncoder passwordEncoder) {
         this.citizenRepository = citizenRepository;
         this.jwtProvider = jwtProvider;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public AuthResponse login(String cccdNumber, String password) {
         Citizen citizen = citizenRepository.findByCccdNumber(cccdNumber)
                 .orElseThrow(() -> new RuntimeException("Số CCCD không tồn tại"));
 
-        // Trong thực tế cần check password hash
-        if (!citizen.getPassword().equals(password)) {
+        if (!passwordEncoder.matches(password, citizen.getPasswordHash())) {
             throw new RuntimeException("Mật khẩu không chính xác");
         }
 
@@ -34,8 +34,8 @@ public class LoginUseCase {
             throw new RuntimeException("Tài khoản chưa được kích hoạt");
         }
 
-        List<String> roles = parseRoles(citizen.getRole());
-        String activeRole = roles.get(0); // Mặc định role đầu tiên là active
+        List<String> roles = List.of("ROLE_CITIZEN");
+        String activeRole = "ROLE_CITIZEN";
 
         String token = jwtProvider.generateToken(
                 citizen.getCccdNumber(),
@@ -85,14 +85,5 @@ public class LoginUseCase {
                 .roles(roles)
                 .message("Chuyển vai trò thành công")
                 .build();
-    }
-
-    private List<String> parseRoles(String roleString) {
-        if (roleString == null || roleString.isEmpty()) {
-            return List.of("ROLE_CITIZEN");
-        }
-        return Arrays.stream(roleString.split(","))
-                .map(String::trim)
-                .collect(Collectors.toList());
     }
 }

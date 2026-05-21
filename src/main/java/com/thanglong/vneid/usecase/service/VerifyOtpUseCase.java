@@ -1,7 +1,7 @@
 package com.thanglong.vneid.usecase.service;
 
-import com.thanglong.vneid.domain.model.Otp;
-import com.thanglong.vneid.domain.repository.OtpRepository;
+import com.thanglong.vneid.domain.model.OtpRequest;
+import com.thanglong.vneid.domain.repository.OtpRequestRepository;
 import com.thanglong.vneid.usecase.port.EmailService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -15,10 +15,10 @@ import java.util.Random;
 @Service
 public class VerifyOtpUseCase {
 
-    private final OtpRepository otpRepository;
+    private final OtpRequestRepository otpRepository;
     private final EmailService emailService;
 
-    public VerifyOtpUseCase(OtpRepository otpRepository, EmailService emailService) {
+    public VerifyOtpUseCase(OtpRequestRepository otpRepository, EmailService emailService) {
         this.otpRepository = otpRepository;
         this.emailService = emailService;
     }
@@ -32,7 +32,7 @@ public class VerifyOtpUseCase {
     public void generateAndSendOtp(String email) {
         String otpCode = generateOtpCode();
 
-        Otp otp = Otp.builder()
+        OtpRequest otp = OtpRequest.builder()
                 .email(email)
                 .otpCode(otpCode)
                 .createdAt(LocalDateTime.now())
@@ -48,7 +48,7 @@ public class VerifyOtpUseCase {
      * Xác thực OTP.
      */
     public boolean verifyOtp(String email, String otpCode) {
-        Otp otp = otpRepository.findByEmailAndOtpCode(email, otpCode)
+        OtpRequest otp = otpRepository.findByEmailAndOtpCode(email, otpCode)
                 .orElseThrow(() -> new RuntimeException("OTP không hợp lệ"));
 
         if (otp.isUsed()) {

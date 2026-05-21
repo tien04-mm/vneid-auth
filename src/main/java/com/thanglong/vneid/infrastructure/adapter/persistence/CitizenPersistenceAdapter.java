@@ -78,41 +78,33 @@ public class CitizenPersistenceAdapter implements CitizenRepository {
 
     private Citizen toDomain(CitizenEntity entity) {
         return Citizen.builder()
-                .cccdNumber(entity.getCccdNumber())   // PK thật của bảng (số CCCD 12 số)
+                .cccdNumber(entity.getCccdNumber())
                 .firebaseUid(entity.getFirebaseUid())
                 .fullName(entity.getFullName())
-                .dateOfBirth(entity.getDateOfBirth())
+                .dob(entity.getDob())
                 .gender(entity.getGender())
-                .address(entity.getAddress())
                 .phoneNumber(entity.getPhoneNumber())
                 .email(entity.getEmail())
-                .password(entity.getPassword())
-                .passcode(entity.getPasscode())
-                .role(entity.getRole())
+                .passwordHash(entity.getPasswordHash())
+                .passcodeHash(entity.getPasscodeHash())
                 .accountStatus(entity.getAccountStatus())
-                .avatarUrl(entity.getAvatarUrl())
                 .createdAt(entity.getCreatedAt())
-                .updatedAt(entity.getUpdatedAt())
                 .build();
     }
 
     private CitizenEntity toEntity(Citizen citizen) {
         return CitizenEntity.builder()
-                .cccdNumber(citizen.getCccdNumber())  // PK - không còn trường id số nguyên
+                .cccdNumber(citizen.getCccdNumber())
                 .firebaseUid(citizen.getFirebaseUid())
                 .fullName(citizen.getFullName())
-                .dateOfBirth(citizen.getDateOfBirth())
+                .dob(citizen.getDob())
                 .gender(citizen.getGender())
-                .address(citizen.getAddress())
                 .phoneNumber(citizen.getPhoneNumber())
                 .email(citizen.getEmail())
-                .password(citizen.getPassword())
-                .passcode(citizen.getPasscode())
-                .role(citizen.getRole())
+                .passwordHash(citizen.getPasswordHash())
+                .passcodeHash(citizen.getPasscodeHash())
                 .accountStatus(citizen.getAccountStatus())
-                .avatarUrl(citizen.getAvatarUrl())
                 .createdAt(citizen.getCreatedAt())
-                .updatedAt(citizen.getUpdatedAt())
                 .build();
     }
 }

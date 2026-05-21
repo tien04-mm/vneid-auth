@@ -1,35 +1,31 @@
 package com.thanglong.vneid.infrastructure.adapter.persistence;
 
-import com.thanglong.vneid.domain.model.QrSession;
-import com.thanglong.vneid.domain.repository.QrSessionRepository;
-import com.thanglong.vneid.infrastructure.adapter.persistence.entity.QrSessionEntity;
-import com.thanglong.vneid.infrastructure.adapter.persistence.jpa.QrSessionJpaRepository;
-import lombok.RequiredArgsConstructor;
+import com.thanglong.vneid.domain.model.QrLoginSession;
+import com.thanglong.vneid.domain.repository.QrLoginSessionRepository;
+import com.thanglong.vneid.infrastructure.adapter.persistence.entity.QrLoginSessionEntity;
+import com.thanglong.vneid.infrastructure.adapter.persistence.jpa.QrLoginSessionJpaRepository;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
 
-/**
- * Adapter thực thi giao tiếp với DB cho QrSession.
- */
 @Component
-public class QrSessionPersistenceAdapter implements QrSessionRepository {
+public class QrLoginSessionPersistenceAdapter implements QrLoginSessionRepository {
 
-    private final QrSessionJpaRepository jpaRepository;
+    private final QrLoginSessionJpaRepository jpaRepository;
 
-    public QrSessionPersistenceAdapter(QrSessionJpaRepository jpaRepository) {
+    public QrLoginSessionPersistenceAdapter(QrLoginSessionJpaRepository jpaRepository) {
         this.jpaRepository = jpaRepository;
     }
 
     @Override
-    public Optional<QrSession> findByQrToken(String qrToken) {
+    public Optional<QrLoginSession> findByQrToken(String qrToken) {
         return jpaRepository.findByQrToken(qrToken).map(this::toDomain);
     }
 
     @Override
-    public QrSession save(QrSession qrSession) {
-        QrSessionEntity entity = toEntity(qrSession);
-        QrSessionEntity savedEntity = jpaRepository.save(entity);
+    public QrLoginSession save(QrLoginSession qrLoginSession) {
+        QrLoginSessionEntity entity = toEntity(qrLoginSession);
+        QrLoginSessionEntity savedEntity = jpaRepository.save(entity);
         return toDomain(savedEntity);
     }
 
@@ -43,9 +39,9 @@ public class QrSessionPersistenceAdapter implements QrSessionRepository {
         jpaRepository.deleteExpiredSessions();
     }
 
-    private QrSession toDomain(QrSessionEntity entity) {
+    private QrLoginSession toDomain(QrLoginSessionEntity entity) {
         if (entity == null) return null;
-        return QrSession.builder()
+        return QrLoginSession.builder()
                 .qrToken(entity.getQrToken())
                 .status(entity.getStatus())
                 .cccdNumber(entity.getCccdNumber())
@@ -54,9 +50,9 @@ public class QrSessionPersistenceAdapter implements QrSessionRepository {
                 .build();
     }
 
-    private QrSessionEntity toEntity(QrSession domain) {
+    private QrLoginSessionEntity toEntity(QrLoginSession domain) {
         if (domain == null) return null;
-        return QrSessionEntity.builder()
+        return QrLoginSessionEntity.builder()
                 .qrToken(domain.getQrToken())
                 .status(domain.getStatus())
                 .cccdNumber(domain.getCccdNumber())

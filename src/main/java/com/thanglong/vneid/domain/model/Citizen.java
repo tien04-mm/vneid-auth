@@ -13,40 +13,32 @@ public class Citizen {
     private String cccdNumber; // Số CCCD (Khóa chính)
     private String firebaseUid; // Firebase UID
     private String fullName;
-    private LocalDate dateOfBirth;
+    private LocalDate dob;
     private String gender;
-    private String address;
     private String phoneNumber;
     private String email;
-    private String password;
-    private String passcode; // Mã PIN 6 số
-    private String role; // ROLE_CITIZEN, ROLE_ADMIN
+    private String passwordHash;
+    private String passcodeHash;
     private String accountStatus;
-    private String avatarUrl;
     private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
 
     public Citizen() {
     }
 
-    public Citizen(String cccdNumber, String firebaseUid, String fullName, LocalDate dateOfBirth, String gender,
-            String address, String phoneNumber, String email, String password, String passcode, String role,
-            String accountStatus, String avatarUrl, LocalDateTime createdAt, LocalDateTime updatedAt) {
+    public Citizen(String cccdNumber, String firebaseUid, String fullName, LocalDate dob, String gender,
+            String phoneNumber, String email, String passwordHash, String passcodeHash,
+            String accountStatus, LocalDateTime createdAt) {
         this.cccdNumber = cccdNumber;
         this.firebaseUid = firebaseUid;
         this.fullName = fullName;
-        this.dateOfBirth = dateOfBirth;
+        this.dob = dob;
         this.gender = gender;
-        this.address = address;
         this.phoneNumber = phoneNumber;
         this.email = email;
-        this.password = password;
-        this.passcode = passcode;
-        this.role = role;
+        this.passwordHash = passwordHash;
+        this.passcodeHash = passcodeHash;
         this.accountStatus = accountStatus;
-        this.avatarUrl = avatarUrl;
         this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
     }
 
     public static CitizenBuilder builder() {
@@ -77,12 +69,12 @@ public class Citizen {
         this.fullName = fullName;
     }
 
-    public LocalDate getDateOfBirth() {
-        return dateOfBirth;
+    public LocalDate getDob() {
+        return dob;
     }
 
-    public void setDateOfBirth(LocalDate dateOfBirth) {
-        this.dateOfBirth = dateOfBirth;
+    public void setDob(LocalDate dob) {
+        this.dob = dob;
     }
 
     public String getGender() {
@@ -91,14 +83,6 @@ public class Citizen {
 
     public void setGender(String gender) {
         this.gender = gender;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
     }
 
     public String getPhoneNumber() {
@@ -117,28 +101,20 @@ public class Citizen {
         this.email = email;
     }
 
-    public String getPassword() {
-        return password;
+    public String getPasswordHash() {
+        return passwordHash;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public void setPasswordHash(String passwordHash) {
+        this.passwordHash = passwordHash;
     }
 
-    public String getPasscode() {
-        return passcode;
+    public String getPasscodeHash() {
+        return passcodeHash;
     }
 
-    public void setPasscode(String passcode) {
-        this.passcode = passcode;
-    }
-
-    public String getRole() {
-        return role;
-    }
-
-    public void setRole(String role) {
-        this.role = role;
+    public void setPasscodeHash(String passcodeHash) {
+        this.passcodeHash = passcodeHash;
     }
 
     public String getAccountStatus() {
@@ -149,14 +125,6 @@ public class Citizen {
         this.accountStatus = accountStatus;
     }
 
-    public String getAvatarUrl() {
-        return avatarUrl;
-    }
-
-    public void setAvatarUrl(String avatarUrl) {
-        this.avatarUrl = avatarUrl;
-    }
-
     public LocalDateTime getCreatedAt() {
         return createdAt;
     }
@@ -165,30 +133,18 @@ public class Citizen {
         this.createdAt = createdAt;
     }
 
-    public LocalDateTime getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public void setUpdatedAt(LocalDateTime updatedAt) {
-        this.updatedAt = updatedAt;
-    }
-
     public static class CitizenBuilder {
         private String cccdNumber;
         private String firebaseUid;
         private String fullName;
-        private LocalDate dateOfBirth;
+        private LocalDate dob;
         private String gender;
-        private String address;
         private String phoneNumber;
         private String email;
-        private String password;
-        private String passcode;
-        private String role;
+        private String passwordHash;
+        private String passcodeHash;
         private String accountStatus;
-        private String avatarUrl;
         private LocalDateTime createdAt;
-        private LocalDateTime updatedAt;
 
         public CitizenBuilder cccdNumber(String cccdNumber) {
             this.cccdNumber = cccdNumber;
@@ -205,18 +161,13 @@ public class Citizen {
             return this;
         }
 
-        public CitizenBuilder dateOfBirth(LocalDate dateOfBirth) {
-            this.dateOfBirth = dateOfBirth;
+        public CitizenBuilder dob(LocalDate dob) {
+            this.dob = dob;
             return this;
         }
 
         public CitizenBuilder gender(String gender) {
             this.gender = gender;
-            return this;
-        }
-
-        public CitizenBuilder address(String address) {
-            this.address = address;
             return this;
         }
 
@@ -230,18 +181,13 @@ public class Citizen {
             return this;
         }
 
-        public CitizenBuilder password(String password) {
-            this.password = password;
+        public CitizenBuilder passwordHash(String passwordHash) {
+            this.passwordHash = passwordHash;
             return this;
         }
 
-        public CitizenBuilder passcode(String passcode) {
-            this.passcode = passcode;
-            return this;
-        }
-
-        public CitizenBuilder role(String role) {
-            this.role = role;
+        public CitizenBuilder passcodeHash(String passcodeHash) {
+            this.passcodeHash = passcodeHash;
             return this;
         }
 
@@ -250,24 +196,14 @@ public class Citizen {
             return this;
         }
 
-        public CitizenBuilder avatarUrl(String avatarUrl) {
-            this.avatarUrl = avatarUrl;
-            return this;
-        }
-
         public CitizenBuilder createdAt(LocalDateTime createdAt) {
             this.createdAt = createdAt;
             return this;
         }
 
-        public CitizenBuilder updatedAt(LocalDateTime updatedAt) {
-            this.updatedAt = updatedAt;
-            return this;
-        }
-
         public Citizen build() {
-            return new Citizen(cccdNumber, firebaseUid, fullName, dateOfBirth, gender, address, phoneNumber, email,
-                    password, passcode, role, accountStatus, avatarUrl, createdAt, updatedAt);
+            return new Citizen(cccdNumber, firebaseUid, fullName, dob, gender, phoneNumber, email,
+                    passwordHash, passcodeHash, accountStatus, createdAt);
         }
     }
 }

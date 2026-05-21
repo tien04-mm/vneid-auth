@@ -5,22 +5,22 @@ import lombok.*;
 import java.time.LocalDateTime;
 
 /**
- * Domain model đại diện cho mã OTP xác thực.
+ * Domain model đại diện cho mã OTP xác thực (khớp với bảng otp_requests).
  */
-public class Otp {
+public class OtpRequest {
 
     private Long id;
-    private String cccdNumber; // CCCD liên kết với OTP
+    private String cccdNumber;
     private String email;
     private String otpCode;
     private LocalDateTime createdAt;
     private LocalDateTime expiresAt;
     private boolean used;
 
-    public Otp() {
+    public OtpRequest() {
     }
 
-    public Otp(Long id, String cccdNumber, String email, String otpCode, LocalDateTime createdAt,
+    public OtpRequest(Long id, String cccdNumber, String email, String otpCode, LocalDateTime createdAt,
             LocalDateTime expiresAt, boolean used) {
         this.id = id;
         this.cccdNumber = cccdNumber;
@@ -31,8 +31,8 @@ public class Otp {
         this.used = used;
     }
 
-    public static OtpBuilder builder() {
-        return new OtpBuilder();
+    public static OtpRequestBuilder builder() {
+        return new OtpRequestBuilder();
     }
 
     public Long getId() {
@@ -91,7 +91,7 @@ public class Otp {
         this.used = used;
     }
 
-    public static class OtpBuilder {
+    public static class OtpRequestBuilder {
         private Long id;
         private String cccdNumber;
         private String email;
@@ -100,43 +100,43 @@ public class Otp {
         private LocalDateTime expiresAt;
         private boolean used;
 
-        public OtpBuilder id(Long id) {
+        public OtpRequestBuilder id(Long id) {
             this.id = id;
             return this;
         }
 
-        public OtpBuilder cccdNumber(String cccdNumber) {
+        public OtpRequestBuilder cccdNumber(String cccdNumber) {
             this.cccdNumber = cccdNumber;
             return this;
         }
 
-        public OtpBuilder email(String email) {
+        public OtpRequestBuilder email(String email) {
             this.email = email;
             return this;
         }
 
-        public OtpBuilder otpCode(String otpCode) {
+        public OtpRequestBuilder otpCode(String otpCode) {
             this.otpCode = otpCode;
             return this;
         }
 
-        public OtpBuilder createdAt(LocalDateTime createdAt) {
+        public OtpRequestBuilder createdAt(LocalDateTime createdAt) {
             this.createdAt = createdAt;
             return this;
         }
 
-        public OtpBuilder expiresAt(LocalDateTime expiresAt) {
+        public OtpRequestBuilder expiresAt(LocalDateTime expiresAt) {
             this.expiresAt = expiresAt;
             return this;
         }
 
-        public OtpBuilder used(boolean used) {
+        public OtpRequestBuilder used(boolean used) {
             this.used = used;
             return this;
         }
 
-        public Otp build() {
-            return new Otp(id, cccdNumber, email, otpCode, createdAt, expiresAt, used);
+        public OtpRequest build() {
+            return new OtpRequest(id, cccdNumber, email, otpCode, createdAt, expiresAt, used);
         }
     }
 }

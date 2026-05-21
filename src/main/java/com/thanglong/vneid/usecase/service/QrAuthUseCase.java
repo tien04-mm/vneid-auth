@@ -5,9 +5,9 @@ import com.google.zxing.client.j2se.MatrixToImageWriter;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
 import com.thanglong.vneid.domain.model.Citizen;
-import com.thanglong.vneid.domain.model.QrSession;
+import com.thanglong.vneid.domain.model.QrLoginSession;
 import com.thanglong.vneid.domain.repository.CitizenRepository;
-import com.thanglong.vneid.domain.repository.QrSessionRepository;
+import com.thanglong.vneid.domain.repository.QrLoginSessionRepository;
 import com.thanglong.vneid.usecase.dto.*;
 import com.thanglong.vneid.usecase.port.JwtProvider;
 import lombok.RequiredArgsConstructor;
@@ -28,11 +28,11 @@ import java.util.UUID;
 public class QrAuthUseCase {
     private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(QrAuthUseCase.class);
 
-    private final QrSessionRepository qrSessionRepository;
+    private final QrLoginSessionRepository qrSessionRepository;
     private final CitizenRepository citizenRepository;
     private final JwtProvider jwtProvider;
 
-    public QrAuthUseCase(QrSessionRepository qrSessionRepository, CitizenRepository citizenRepository,
+    public QrAuthUseCase(QrLoginSessionRepository qrSessionRepository, CitizenRepository citizenRepository,
             JwtProvider jwtProvider) {
         this.qrSessionRepository = qrSessionRepository;
         this.citizenRepository = citizenRepository;
@@ -47,7 +47,7 @@ public class QrAuthUseCase {
         String qrToken = UUID.randomUUID().toString();
         LocalDateTime expiresAt = LocalDateTime.now().plusMinutes(5);
 
-        QrSession session = QrSession.builder()
+        QrLoginSession session = QrLoginSession.builder()
                 .qrToken(qrToken)
                 .status("PENDING")
                 .createdAt(LocalDateTime.now())
@@ -72,7 +72,7 @@ public class QrAuthUseCase {
      * Kiểm tra trạng thái của mã QR (được gọi từ web frontend).
      */
     public ApiResponse<QrStatusResponse> getQrStatus(String qrToken) {
-        QrSession session = qrSessionRepository.findByQrToken(qrToken)
+        QrLoginSession session = qrSessionRepository.findByQrToken(qrToken)
                 .orElseThrow(() -> new RuntimeException("Mã QR không tồn tại"));
 
         // Kiểm tra hết hạn
@@ -93,7 +93,7 @@ public class QrAuthUseCase {
      * Handshake cuối cùng: Đăng nhập bằng QR sau khi Mobile đã xác nhận.
      */
     public ApiResponse<AuthResponse> loginByQr(String qrToken) {
-        QrSession session = qrSessionRepository.findByQrToken(qrToken)
+        QrLoginSession session = qrSessionRepository.findByQrToken(qrToken)
                 .orElseThrow(() -> new RuntimeException("Mã QR không tồn tại"));
 
         if (!"SUCCESS".equals(session.getStatus())) {
@@ -104,12 +104,8 @@ public class QrAuthUseCase {
         Citizen citizen = citizenRepository.findByCccdNumber(session.getCccdNumber())
                 .orElseThrow(() -> new RuntimeException("Công dân không tồn tại với CCCD: " + session.getCccdNumber()));
 
-        String roleStr = citizen.getRole() != null ? citizen.getRole() : "ROLE_CITIZEN";
-        java.util.List<String> roles = java.util.Arrays.stream(roleStr.split(","))
-                .map(String::trim)
-                .collect(java.util.stream.Collectors.toList());
-
-        String activeRole = roles.get(0);
+        java.util.List<String> roles = java.util.List.of("ROLE_CITIZEN");
+        String activeRole = "ROLE_CITIZEN";
         String fullName = citizen.getFullName() != null ? citizen.getFullName() : "Người dùng";
         String email = citizen.getEmail() != null ? citizen.getEmail() : "";
 
@@ -140,7 +136,7 @@ public class QrAuthUseCase {
      */
     @Transactional
     public void confirmQr(QrConfirmRequest request) {
-        QrSession session = qrSessionRepository.findByQrToken(request.getQrToken())
+        QrLoginSession session = qrSessionRepository.findByQrToken(request.getQrToken())
                 .orElseThrow(() -> new RuntimeException("Mã QR không hợp lệ"));
 
         if ("EXPIRED".equals(session.getStatus())) {
