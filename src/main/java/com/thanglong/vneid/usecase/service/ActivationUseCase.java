@@ -1,5 +1,6 @@
 package com.thanglong.vneid.usecase.service;
 
+import com.thanglong.vneid.domain.exception.AccountAlreadyActivatedException;
 import com.thanglong.vneid.domain.model.Citizen;
 import com.thanglong.vneid.domain.model.OtpRequest;
 import com.thanglong.vneid.domain.repository.CitizenRepository;
@@ -31,16 +32,16 @@ public class ActivationUseCase {
         Citizen citizen = citizenRepository.findByCccdNumber(cccdNumber)
                 .orElseThrow(() -> new RuntimeException("Số CCCD không tồn tại trong hệ thống"));
 
-        if (!citizen.getPhoneNumber().equals(phoneNumber)) {
+        if (citizen.getPhoneNumber() == null || !phoneNumber.equals(citizen.getPhoneNumber())) {
             throw new RuntimeException("Số điện thoại không khớp với dữ liệu dân cư");
         }
 
-        if (!citizen.getEmail().equalsIgnoreCase(email)) {
+        if (citizen.getEmail() == null || !email.equalsIgnoreCase(citizen.getEmail())) {
             throw new RuntimeException("Email không khớp với dữ liệu dân cư");
         }
 
         if ("ACTIVE".equals(citizen.getAccountStatus())) {
-            throw new RuntimeException("Tài khoản đã được kích hoạt");
+            throw new AccountAlreadyActivatedException("Tài khoản đã được kích hoạt");
         }
 
         // Sinh OTP
