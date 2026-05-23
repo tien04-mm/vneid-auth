@@ -89,6 +89,7 @@ public class CitizenPersistenceAdapter implements CitizenRepository {
                 .passcodeHash(entity.getPasscodeHash())
                 .accountStatus(entity.getAccountStatus())
                 .createdAt(entity.getCreatedAt())
+                .role(entity.getRole())
                 .build();
     }
 
@@ -105,6 +106,7 @@ public class CitizenPersistenceAdapter implements CitizenRepository {
                 .passcodeHash(citizen.getPasscodeHash())
                 .accountStatus(citizen.getAccountStatus())
                 .createdAt(citizen.getCreatedAt())
+                .role(citizen.getRole())
                 .build();
     }
 }

@@ -41,8 +41,19 @@ public class LoginUseCase {
             throw new RuntimeException("Tài khoản chưa được kích hoạt");
         }
 
-        List<String> roles = List.of("ROLE_CITIZEN");
-        String activeRole = "ROLE_CITIZEN";
+        java.util.List<String> roles = new java.util.ArrayList<>();
+        if (citizen.getRole() != null && !citizen.getRole().trim().isEmpty()) {
+            for (String r : citizen.getRole().split(",")) {
+                String trimmed = r.trim();
+                if (!trimmed.isEmpty()) {
+                    roles.add(trimmed);
+                }
+            }
+        }
+        if (roles.isEmpty()) {
+            roles.add("ROLE_CITIZEN");
+        }
+        String activeRole = getMostPrivilegedRole(roles);
 
         String token = jwtProvider.generateToken(
                 citizen.getCccdNumber(),
@@ -92,5 +103,33 @@ public class LoginUseCase {
                 .roles(roles)
                 .message("Chuyển vai trò thành công")
                 .build();
+    }
+
+    private String getMostPrivilegedRole(java.util.List<String> roles) {
+        if (roles == null || roles.isEmpty()) {
+            return "ROLE_CITIZEN";
+        }
+        String bestRole = roles.get(0);
+        int maxWeight = getRoleWeight(bestRole);
+        for (int i = 1; i < roles.size(); i++) {
+            String role = roles.get(i);
+            int weight = getRoleWeight(role);
+            if (weight > maxWeight) {
+                maxWeight = weight;
+                bestRole = role;
+            }
+        }
+        return bestRole;
+    }
+
+    private int getRoleWeight(String role) {
+        if (role == null) return 0;
+        switch (role) {
+            case "ROLE_ADMIN": return 4;
+            case "ROLE_TAX_OFFICER": return 3;
+            case "ROLE_LAND_OFFICER": return 2;
+            case "ROLE_CITIZEN": return 1;
+            default: return 0;
+        }
     }
 }

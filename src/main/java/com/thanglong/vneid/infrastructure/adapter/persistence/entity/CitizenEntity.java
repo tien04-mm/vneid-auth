@@ -47,6 +47,9 @@ public class CitizenEntity {
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
 
+    @Column(name = "role", length = 255)
+    private String role;
+
     @OneToMany(mappedBy = "citizen", fetch = FetchType.LAZY)
     private java.util.List<OtpRequestEntity> otpRequests;
 
@@ -57,7 +60,7 @@ public class CitizenEntity {
 
     public CitizenEntity(String cccdNumber, String firebaseUid, String fullName, LocalDate dob, String gender,
             String phoneNumber, String email, String passwordHash, String passcodeHash,
-            String accountStatus, LocalDateTime createdAt, java.util.List<OtpRequestEntity> otpRequests, java.util.List<QrLoginSessionEntity> qrLoginSessions) {
+            String accountStatus, LocalDateTime createdAt, String role, java.util.List<OtpRequestEntity> otpRequests, java.util.List<QrLoginSessionEntity> qrLoginSessions) {
         this.cccdNumber = cccdNumber;
         this.firebaseUid = firebaseUid;
         this.fullName = fullName;
@@ -69,6 +72,7 @@ public class CitizenEntity {
         this.passcodeHash = passcodeHash;
         this.accountStatus = accountStatus;
         this.createdAt = createdAt;
+        this.role = role;
         this.otpRequests = otpRequests;
         this.qrLoginSessions = qrLoginSessions;
     }
@@ -99,6 +103,8 @@ public class CitizenEntity {
     public void setAccountStatus(String accountStatus) { this.accountStatus = accountStatus; }
     public LocalDateTime getCreatedAt() { return createdAt; }
     public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
+    public String getRole() { return role; }
+    public void setRole(String role) { this.role = role; }
     public java.util.List<OtpRequestEntity> getOtpRequests() { return otpRequests; }
     public void setOtpRequests(java.util.List<OtpRequestEntity> otpRequests) { this.otpRequests = otpRequests; }
     public java.util.List<QrLoginSessionEntity> getQrLoginSessions() { return qrLoginSessions; }
@@ -116,6 +122,7 @@ public class CitizenEntity {
         private String passcodeHash;
         private String accountStatus;
         private LocalDateTime createdAt;
+        private String role;
         private java.util.List<OtpRequestEntity> otpRequests;
         private java.util.List<QrLoginSessionEntity> qrLoginSessions;
 
@@ -130,10 +137,11 @@ public class CitizenEntity {
         public CitizenEntityBuilder passcodeHash(String passcodeHash) { this.passcodeHash = passcodeHash; return this; }
         public CitizenEntityBuilder accountStatus(String accountStatus) { this.accountStatus = accountStatus; return this; }
         public CitizenEntityBuilder createdAt(LocalDateTime createdAt) { this.createdAt = createdAt; return this; }
+        public CitizenEntityBuilder role(String role) { this.role = role; return this; }
         public CitizenEntityBuilder otpRequests(java.util.List<OtpRequestEntity> otpRequests) { this.otpRequests = otpRequests; return this; }
         public CitizenEntityBuilder qrLoginSessions(java.util.List<QrLoginSessionEntity> qrLoginSessions) { this.qrLoginSessions = qrLoginSessions; return this; }
         public CitizenEntity build() {
-            return new CitizenEntity(cccdNumber, firebaseUid, fullName, dob, gender, phoneNumber, email, passwordHash, passcodeHash, accountStatus, createdAt, otpRequests, qrLoginSessions);
+            return new CitizenEntity(cccdNumber, firebaseUid, fullName, dob, gender, phoneNumber, email, passwordHash, passcodeHash, accountStatus, createdAt, role, otpRequests, qrLoginSessions);
         }
     }
 

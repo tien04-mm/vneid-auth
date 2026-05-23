@@ -21,13 +21,14 @@ public class Citizen {
     private String passcodeHash;
     private String accountStatus;
     private LocalDateTime createdAt;
+    private String role; // Danh sách vai trò cách nhau bởi dấu phẩy (e.g., ROLE_TAX_OFFICER,ROLE_CITIZEN)
 
     public Citizen() {
     }
 
     public Citizen(String cccdNumber, String firebaseUid, String fullName, LocalDate dob, String gender,
             String phoneNumber, String email, String passwordHash, String passcodeHash,
-            String accountStatus, LocalDateTime createdAt) {
+            String accountStatus, LocalDateTime createdAt, String role) {
         this.cccdNumber = cccdNumber;
         this.firebaseUid = firebaseUid;
         this.fullName = fullName;
@@ -39,6 +40,7 @@ public class Citizen {
         this.passcodeHash = passcodeHash;
         this.accountStatus = accountStatus;
         this.createdAt = createdAt;
+        this.role = role;
     }
 
     public static CitizenBuilder builder() {
@@ -133,6 +135,14 @@ public class Citizen {
         this.createdAt = createdAt;
     }
 
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
+
     public static class CitizenBuilder {
         private String cccdNumber;
         private String firebaseUid;
@@ -145,6 +155,7 @@ public class Citizen {
         private String passcodeHash;
         private String accountStatus;
         private LocalDateTime createdAt;
+        private String role;
 
         public CitizenBuilder cccdNumber(String cccdNumber) {
             this.cccdNumber = cccdNumber;
@@ -201,9 +212,14 @@ public class Citizen {
             return this;
         }
 
+        public CitizenBuilder role(String role) {
+            this.role = role;
+            return this;
+        }
+
         public Citizen build() {
             return new Citizen(cccdNumber, firebaseUid, fullName, dob, gender, phoneNumber, email,
-                    passwordHash, passcodeHash, accountStatus, createdAt);
+                    passwordHash, passcodeHash, accountStatus, createdAt, role);
         }
     }
 }
